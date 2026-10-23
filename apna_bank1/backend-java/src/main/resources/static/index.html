@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apna Bank — Royal Golden Edition</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Royal Banner -->
+  <div class="simulation-banner">
+    <span class="crown">👑</span> Apna Bank Royal Simulator — Virtual High-Net-Worth Wealth & 24/7 Fractional Asset Exchange
+  </div>
+
+  <!-- AUTHENTICATION VIEW -->
+  <div id="auth-container" class="auth-box">
+    <div class="auth-header">
+      <div class="brand-badge">APNA BANK</div>
+      <h1 class="logo-title">Imperial Reserve</h1>
+      <p class="tagline">Exclusive Fractional Wealth. 24/7 Global Trading.</p>
+    </div>
+
+    <div class="auth-tabs">
+      <button id="tab-login-btn" class="active" onclick="switchAuthTab('login')">Sign In</button>
+      <button id="tab-register-btn" onclick="switchAuthTab('register')">Create Account</button>
+    </div>
+
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="login-username" required placeholder="e.g. alexander">
+      </div>
+      <div class="form-group">
+        <label>Passcode</label>
+        <input type="password" id="login-password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-gold">Enter Vault</button>
+    </form>
+
+    <form id="register-form" style="display: none;" onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label>Full Legal Name</label>
+        <input type="text" id="reg-fullname" required placeholder="Alexander Vance">
+      </div>
+      <div class="form-group">
+        <label>Choose Username</label>
+        <input type="text" id="reg-username" required placeholder="alexander">
+      </div>
+      <div class="form-group">
+        <label>Security Password</label>
+        <input type="password" id="reg-password" required minlength="6" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>Preferred Language</label>
+        <select id="reg-language">
+          <option value="en">English (Royal Edition)</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="gu">ગુજરાતી (Gujarati)</option>
+          <option value="mr">मराठी (Marathi)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-gold">Claim ₹5,00,000 Reserve Balance</button>
+    </form>
+    <div id="auth-error" class="error-msg"></div>
+  </div>
+
+  <!-- MAIN DASHBOARD -->
+  <div id="app-container" style="display: none;">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-brand">
+        <span class="gold-icon">🏛️</span>
+        <span class="brand-title">APNA BANK <span class="royal-pill">ROYAL</span></span>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="lang-selector">
+          🌐
+          <select id="global-lang-select" onchange="changeLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="gu">ગુજરાતી</option>
+            <option value="mr">मराठी</option>
+            <option value="bn">বাংলা</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+          </select>
+        </div>
+        <div class="user-pill"><span id="user-display-name">👑 Dignitary</span></div>
+        <button class="btn btn-outline-gold" onclick="handleLogout()">Exit Vault</button>
+      </div>
+    </header>
+
+    <div class="main-body">
+      <!-- Sidebar -->
+      <nav class="sidebar">
+        <button class="nav-btn active" onclick="navigate('dashboard')">🏛️ Dashboard</button>
+        <button class="nav-btn" onclick="navigate('market')">📈 24/7 Asset Exchange</button>
+        <button class="nav-btn" onclick="navigate('portfolio')">💼 My Holdings & P&L</button>
+        <button class="nav-btn" onclick="navigate('banking')">💳 Private Banking</button>
+        <button class="nav-btn" onclick="navigate('loans')">💰 Sovereign Credit</button>
+        <button class="nav-btn" onclick="navigate('messages')">✉️ Royal Dispatch</button>
+      </nav>
+
+      <main class="content-pane">
+        <!-- 1. DASHBOARD -->
+        <section id="view-dashboard" class="view-section active">
+          <div class="grid-cards">
+            <div class="card stat-card gold-glow">
+              <span class="stat-label">Total Net Worth</span>
+              <h2 id="card-networth" class="gold-text">₹0.00</h2>
+              <span class="sub-label">Assets minus Debt</span>
+            </div>
+            <div class="card stat-card">
+              <span class="stat-label">Available Liquidity</span>
+              <h2 id="card-cash-balance">₹0.00</h2>
+              <span class="sub-label">Instant Reserve Cash</span>
+            </div>
+            <div class="card stat-card">
+              <span class="stat-label">Invested Capital</span>
+              <h2 id="card-investment-val" class="green-text">₹0.00</h2>
+              <span class="sub-label">Stocks, Gold, ETFs, Real Estate</span>
+            </div>
+            <div class="card stat-card">
+              <span class="stat-label">Imperial Credit Score</span>
+              <h2 id="card-credit-score" class="gold-text">780</h2>
+              <span class="badge badge-gold">EXCELLENT</span>
+            </div>
+          </div>
+
+          <div class="charts-row">
+            <div class="card chart-card">
+              <h3 class="card-heading">Asset Allocation Distribution</h3>
+              <canvas id="assetChart"></canvas>
+            </div>
+            <div class="card">
+              <h3 class="card-heading">24/7 Global Live Feed</h3>
+              <div class="live-status-chip">● MARKET 24/7 ACTIVE & RUNNING</div>
+              <table class="data-table">
+                <thead><tr><th>Asset</th><th>Spot Price</th><th>Type</th></tr></thead>
+                <tbody id="ticker-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. 24/7 ASSET EXCHANGE -->
+        <section id="view-market" class="view-section">
+          <div class="card">
+            <div class="market-header-row">
+              <h3 class="card-heading">Global Fractional Asset Exchange (24/7 Continuous Trading)</h3>
+              <div class="search-box">
+                <input type="text" id="market-search" placeholder="Search Apple, Gold, VOO, Dubai Villa..." oninput="filterAssets()">
+              </div>
+            </div>
+
+            <!-- Category Pills -->
+            <div class="category-tabs">
+              <button class="cat-pill active" onclick="setAssetCategory('ALL', this)">All Assets (60+)</button>
+              <button class="cat-pill" onclick="setAssetCategory('STOCKS', this)">Stocks (30)</button>
+              <button class="cat-pill" onclick="setAssetCategory('COMMODITIES', this)">Commodities (20)</button>
+              <button class="cat-pill" onclick="setAssetCategory('ETFS', this)">ETFs (5)</button>
+              <button class="cat-pill" onclick="setAssetCategory('REALESTATE', this)">Real Estate</button>
+              <button class="cat-pill" onclick="setAssetCategory('CRYPTO', this)">Crypto</button>
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Symbol</th>
+                  <th>Name</th>
+                  <th>Class</th>
+                  <th>Market Price</th>
+                  <th>Min Fractional</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="full-market-tbody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 3. MY HOLDINGS & P&L -->
+        <section id="view-portfolio" class="view-section">
+          <div class="card">
+            <h3 class="card-heading">Vault Portfolio & Profit / Loss Statement</h3>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Asset</th>
+                  <th>Units Owned</th>
+                  <th>Avg Cost</th>
+                  <th>Current Price</th>
+                  <th>Market Value</th>
+                  <th>Unrealized P&L</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="portfolio-tbody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 4. BANKING & TRANSFERS -->
+        <section id="view-banking" class="view-section">
+          <div class="grid-two">
+            <div class="card">
+              <h3 class="card-heading">Peer-to-Peer Wire Transfer</h3>
+              <div class="tax-info-box">👑 Royal Tax: <strong>6%</strong> is charged to the sender and recorded on the Sovereign Ledger.</div>
+              <form onsubmit="handleTransfer(event)">
+                <div class="form-group"><label>Recipient Username</label><input type="text" id="transfer-recipient" required placeholder="username"></div>
+                <div class="form-group"><label>Amount (₹)</label><input type="number" step="0.01" min="1" id="transfer-amount" required placeholder="5000"></div>
+                <div class="form-group"><label>Reference / Note</label><input type="text" id="transfer-note" placeholder="Private advisory fee"></div>
+                <button type="submit" class="btn btn-gold">Send Wire</button>
+              </form>
+            </div>
+            <div class="card">
+              <h3 class="card-heading">Capital Injection / Withdrawal</h3>
+              <form onsubmit="handleDeposit(event)">
+                <div class="form-group"><label>Inject Capital (₹)</label><input type="number" step="0.01" min="1" id="deposit-amount" required placeholder="100000"></div>
+                <button type="submit" class="btn btn-gold">Inject Funds</button>
+              </form>
+              <hr class="divider">
+              <form onsubmit="handleWithdraw(event)">
+                <div class="form-group"><label>Withdraw to Swiss Vault (₹)</label><input type="number" step="0.01" min="1" id="withdraw-amount" required placeholder="50000"></div>
+                <button type="submit" class="btn btn-outline-gold">Withdraw</button>
+              </form>
+            </div>
+          </div>
+          <div class="card" style="margin-top: 20px;">
+            <h3 class="card-heading">Ledger Transactions</h3>
+            <table class="data-table">
+              <thead><tr><th>Type</th><th>Amount</th><th>Royal Tax</th><th>Counterparty & Note</th><th>Time</th></tr></thead>
+              <tbody id="tx-tbody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 5. SOVEREIGN LOANS -->
+        <section id="view-loans" class="view-section">
+          <div class="grid-two">
+            <div class="card">
+              <h3 class="card-heading">Request Sovereign Credit Line</h3>
+              <p class="text-gold" style="font-size: 13px; margin-bottom: 15px;">Prime Rate: <strong>7.5% per annum</strong>. Up to ₹50,00,000 credit line.</p>
+              <form onsubmit="handleApplyLoan(event)">
+                <div class="form-group"><label>Requested Credit (₹ 1,000 - 50,00,000)</label><input type="number" id="loan-amount" min="1000" max="5000000" required placeholder="500000"></div>
+                <button type="submit" class="btn btn-gold">Disburse Credit Line</button>
+              </form>
+            </div>
+            <div class="card">
+              <h3 class="card-heading">Active Lines of Credit</h3>
+              <table class="data-table">
+                <thead><tr><th>Debt Balance</th><th>Rate</th><th>Status</th><th>Repay</th></tr></thead>
+                <tbody id="loans-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. DISPATCH MESSAGING -->
+        <section id="view-messages" class="view-section">
+          <div class="grid-two">
+            <div class="card">
+              <h3 class="card-heading">Dispatch Encrypted Message</h3>
+              <form onsubmit="handleSendMessage(event)">
+                <div class="form-group"><label>Recipient Handle</label><input type="text" id="msg-recipient" required placeholder="e.g. alexander"></div>
+                <div class="form-group"><label>Diplomatic Dispatch</label><textarea id="msg-body" rows="4" required placeholder="Type your secure message..."></textarea></div>
+                <button type="submit" class="btn btn-gold">Send Dispatch</button>
+              </form>
+            </div>
+            <div class="card">
+              <h3 class="card-heading">Private Inbox</h3>
+              <div id="messages-list" class="messages-container"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- ROYAL BUY/SELL MODAL -->
+  <div id="trade-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-title">Trade Asset</h3>
+        <button class="close-btn" onclick="closeTradeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-asset-info">Current Price: <strong id="modal-price" class="gold-text">₹0.00</strong></p>
+        
+        <div class="form-group">
+          <label>Option A: Quantity (Min 0.0001)</label>
+          <input type="number" id="trade-quantity" step="0.0001" min="0.0001" placeholder="e.g. 0.05" oninput="calcTradeCost('qty')">
+        </div>
+        <div class="form-group">
+          <label>Option B: Or Enter Amount in ₹ (INR)</label>
+          <input type="number" id="trade-amount-inr" step="1" min="10" placeholder="e.g. 5000" oninput="calcTradeCost('amount')">
+        </div>
+
+        <div class="cost-summary">
+          <span>Estimated Total:</span>
+          <strong id="modal-est-cost" class="gold-text">₹0.00</strong>
+        </div>
+
+        <button id="modal-confirm-btn" class="btn btn-gold" onclick="executeTrade()">Confirm Order</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
